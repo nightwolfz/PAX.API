@@ -24,8 +24,8 @@ namespace PAX
 
         public static FacebookAuthenticationOptions facebookAuthOptions = new FacebookAuthenticationOptions()
         {
-            AppId = "304053306454752",
-            AppSecret = "3b8b6d750f3a818184a5413eb981a349",
+            AppId = "",
+            AppSecret = "",
             Provider = new FacebookAuthProvider()
         };
 
