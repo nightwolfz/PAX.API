@@ -13,20 +13,20 @@ namespace PAX.Helpers
      */
     static class Picture
     {
-        public static string uploadFolder = "~/Uploads/";
+        public static string uploadFolder = "~/Content/Uploads/";
 
         public static void Delete(string fileName)
         {
             File.Delete(HostingEnvironment.MapPath(uploadFolder) + "/" + fileName);
         }
 
-        public static void Upload(string fileName, string newFileName)
+        public static void Upload(string srcPath, string newFileName)
         {
-            var filePath = HostingEnvironment.MapPath(uploadFolder) + "/" + fileName;
+            var options = "maxwidth=1280&maxheight=1280&format=jpg";
+            var destPath = HostingEnvironment.MapPath(Path.Combine(uploadFolder, newFileName)) + ".jpg";
 
             // Let the image builder add the correct extension based on the output file type
-            var imageJob = new ImageResizer.ImageJob(filePath, Path.Combine(uploadFolder, newFileName) + "_x.<ext>",
-                           new ImageResizer.Instructions("maxwidth=1280&maxheight=1280&format=jpg"));
+            var imageJob = new ImageResizer.ImageJob(srcPath, destPath, new ImageResizer.Instructions(options));
             imageJob.Build();
         }
     }

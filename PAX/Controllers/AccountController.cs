@@ -232,7 +232,8 @@ namespace PAX.Controllers
                 if (provider == "Facebook")
                 {
                     parsedToken.user_id = jObj["id"];
-                    parsedToken.app_id = "304053306454752"; //jObj["app_id"];
+                    //@TODO: Can we get the appId from the response somehow?
+                    parsedToken.app_id = Startup.facebookAuthOptions.AppId; //"304053306454752"; //jObj["app_id"];
 
                     if (!string.Equals(Startup.facebookAuthOptions.AppId, parsedToken.app_id, StringComparison.OrdinalIgnoreCase))
                     {

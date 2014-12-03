@@ -4,6 +4,7 @@ using System.Data;
 using System.Data.Entity;
 using System.Data.Entity.Infrastructure;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -37,13 +38,15 @@ namespace PAX.Controllers
             return Ok(picture);
         }
 
-        public async Task<IHttpActionResult> PostPicture(Picture picture)
+        public async Task<IHttpActionResult> PostPicture()
         {
             // Check if the request contains multipart/form-data.
             if (!Request.Content.IsMimeMultipartContent())
             {
-                throw new HttpResponseException(HttpStatusCode.UnsupportedMediaType);
+                return BadRequest("Unsupported Media Type. Must be multipart/form-data. RECEIVED: " + Request.Content.Headers.ContentType);
             }
+
+            var test = Request.Content;
 
             var root = HttpContext.Current.Server.MapPath(Helpers.Picture.uploadFolder);
             var provider = new MultipartFormDataStreamProvider(root);
@@ -53,15 +56,19 @@ namespace PAX.Controllers
 
             // This illustrates how to get the file names.
             var messages = new List<string>();
-            foreach (MultipartFileData file in provider.FileData)
+            foreach (var file in provider.FileData)
             {
-                Helpers.Picture.Upload(file.LocalFileName, Guid.NewGuid().ToString());
-                messages.Add("Server file path: " + file.LocalFileName);
+                var picture = new Picture()
+                {
+                };
+                Helpers.Picture.Upload(file.LocalFileName, picture.PictureId);
             }
-            return Ok(messages);
 
             /*db.Pictures.Add(new Item(), "");
             await db.SaveChanges();*/
+            return Ok(messages);
+
+            
         }
 
         public async Task<IHttpActionResult> DeletePicture(string id)
