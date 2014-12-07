@@ -17,6 +17,9 @@ namespace PAX.Services
         PicturesRepository _picture;
         public PicturesRepository Pictures => _picture ?? (_picture = new PicturesRepository(_context));
 
+        ItemsRepository _item;
+        public ItemsRepository Items => _item ?? (_item = new ItemsRepository(_context));
+
         public async Task SaveChanges() => await _context.SaveChangesAsync();
        
 

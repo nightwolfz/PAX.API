@@ -1,8 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.Entity;
+using System.IO;
 using System.Linq;
+using System.Net;
+using System.Net.Http;
 using System.Net.Http.Formatting;
+using System.Net.Http.Headers;
 using System.Web;
 using System.Web.Http;
 using Owin;
@@ -24,8 +28,8 @@ namespace PAX
 
         public static FacebookAuthenticationOptions facebookAuthOptions = new FacebookAuthenticationOptions()
         {
-            AppId = "",
-            AppSecret = "",
+            AppId = "304053306454752",
+            AppSecret = "3b8b6d750f3a818184a5413eb981a349",
             Provider = new FacebookAuthProvider()
         };
 
@@ -34,6 +38,8 @@ namespace PAX
             var config = new HttpConfiguration {IncludeErrorDetailPolicy = IncludeErrorDetailPolicy.Always};
             config.Formatters.Clear();
             config.Formatters.Add(new JsonMediaTypeFormatter());
+            //config.Formatters.Add(new UploadMultipartMediaTypeFormatter());
+
             config.Routes.MapHttpRoute("DefaultApi", "api/{controller}/{id}", new { id = RouteParameter.Optional });
 
             ConfigureOAuth(app);

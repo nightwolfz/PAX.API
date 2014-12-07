@@ -8,7 +8,7 @@ using PAX.Models;
 
 namespace PAX.Services
 {
-    public class PicturesRepository : GenericRepository<Profile>
+    public class PicturesRepository : GenericRepository<Picture>
     {
         public PicturesRepository(ConnectionContext db): base(db)
         {
@@ -18,8 +18,7 @@ namespace PAX.Services
         {
             db.Pictures.Add(new Picture()
             {
-                Item = item,
-                Src = src
+                Item = item
             });
             await db.SaveChangesAsync();
         }
@@ -33,7 +32,7 @@ namespace PAX.Services
 
         public virtual bool Exists(string id)
         {
-            return db.Pictures.Count(e => e.PictureId == id) > 0;
+            return db.Pictures.Count(e => e.Id == id) > 0;
         }
     }
 }

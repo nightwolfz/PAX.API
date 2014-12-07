@@ -26,7 +26,6 @@ namespace PAX.Controllers
 
         public async Task<List<Picture>> GetPictures()
         {
-            //Helpers.Picture.Upload("58GNf.jpg", Guid.NewGuid().ToString());
             return await db.Pictures.GetAll();
         }
 
@@ -38,15 +37,19 @@ namespace PAX.Controllers
             return Ok(picture);
         }
 
-        public async Task<IHttpActionResult> PostPicture()
+        public async Task<IHttpActionResult> PostPicture(string itemId)
         {
+            Item item = await db.Items.FindOne(i => i.Id == itemId);
+            //Item item = await db.Items.Find(itemId);
+
+            if (item == null) return BadRequest("Id not found.");
+            
+
             // Check if the request contains multipart/form-data.
             if (!Request.Content.IsMimeMultipartContent())
             {
                 return BadRequest("Unsupported Media Type. Must be multipart/form-data. RECEIVED: " + Request.Content.Headers.ContentType);
             }
-
-            var test = Request.Content;
 
             var root = HttpContext.Current.Server.MapPath(Helpers.Picture.uploadFolder);
             var provider = new MultipartFormDataStreamProvider(root);
@@ -55,20 +58,16 @@ namespace PAX.Controllers
             await Request.Content.ReadAsMultipartAsync(provider);
 
             // This illustrates how to get the file names.
-            var messages = new List<string>();
+            var messages = new List<Picture>();
             foreach (var file in provider.FileData)
             {
-                var picture = new Picture()
-                {
-                };
-                Helpers.Picture.Upload(file.LocalFileName, picture.PictureId);
+                var picture = new Picture();
+                item.Pictures.Add(picture);
+                messages.Add(picture);
+                Helpers.Picture.Resize(file.LocalFileName, picture.Id);
             }
-
-            /*db.Pictures.Add(new Item(), "");
-            await db.SaveChanges();*/
+            await db.SaveChanges();
             return Ok(messages);
-
-            
         }
 
         public async Task<IHttpActionResult> DeletePicture(string id)

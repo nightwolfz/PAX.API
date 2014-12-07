@@ -26,8 +26,8 @@ namespace PAX.Migrations
         {
             base.Seed(context);
 
-            var sam = new Profile() { Location = "Anderlecht"};
-            var ryan = new Profile() { Location = "Brussels"};
+            var sam = new Profile() { Name = "Sam", Location = "Anderlecht"};
+            var ryan = new Profile() { Name = "Ryan", Location = "Brussels"};
 
             var item = new Item()
             {
@@ -36,7 +36,7 @@ namespace PAX.Migrations
                 Price = 11.5m,
                 Pictures = new List<Picture>
                 {
-                    new Picture() { Src = "test.png" }
+                    new Picture() { }
                 }
             };
 
@@ -61,8 +61,7 @@ namespace PAX.Migrations
                     sb.AppendFormat("{0} failed validation\n", failure.Entry.Entity.GetType());
                     foreach (var error in failure.ValidationErrors)
                     {
-                        //sb.AppendFormat("- {0} : {1}", error.PropertyName, error.ErrorMessage);
-                        sb.AppendLine("- {error.PropertyName} : {error.ErrorMessage}");
+                        sb.AppendFormat("- {0} : {1}", error.PropertyName, error.ErrorMessage);
                         //sb.AppendLine();
                     }
                 }

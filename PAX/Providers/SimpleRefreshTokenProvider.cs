@@ -77,7 +77,7 @@ namespace PAX.Providers
 
                 if (refreshToken != null)
                 {
-                    //Get protectedTicket from refreshToken class
+                    //Find protectedTicket from refreshToken class
                     context.DeserializeTicket(refreshToken.ProtectedTicket);
                     var result = await _repo.RemoveRefreshToken(hashedTokenId);
                 }

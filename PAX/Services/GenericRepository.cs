@@ -21,7 +21,7 @@ namespace PAX.Services
             this.DbSet = db.Set<T>();
         }
 
-        public virtual async Task<IEnumerable<T>> Get(
+        public virtual async Task<IEnumerable<T>> Find(
             Expression<Func<T, bool>> filter = null,
             Func<IQueryable<T>, IOrderedQueryable<T>> orderBy = null,
             string includeProperties = "")
@@ -40,7 +40,7 @@ namespace PAX.Services
             return await query.ToListAsync();
         }
 
-        public virtual async Task<T> Single(Expression<Func<T, bool>> filter) => await DbSet.SingleOrDefaultAsync(filter);
+        public virtual async Task<T> FindOne(Expression<Func<T, bool>> filter) => await DbSet.SingleOrDefaultAsync(filter);
 
         public virtual async Task<T> Find(object id) => await DbSet.FindAsync(id);
 

@@ -25,61 +25,39 @@ namespace PAX.Controllers
         public async Task<IHttpActionResult> GetItem(string id)
         {
             Item item = await db.Items.FindAsync(id);
-            if (item == null)
-            {
-                return NotFound();
-            }
+            if (item == null) return NotFound();
 
             return Ok(item);
         }
 
         public async Task<IHttpActionResult> PutItem(string id, Item item)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
+            if (!ModelState.IsValid) return BadRequest(ModelState);
+            if (id != item.Id) return BadRequest("Incorrect id");
+            if (!ItemExists(id)) return NotFound();
 
-            if (id != item.ItemId)
-            {
-                return BadRequest();
-            }
-
+            item.UpdatedOn = DateTime.Now;
             db.Entry(item).State = EntityState.Modified;
 
-            try
-            {
-                await db.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!ItemExists(id)) return NotFound();
-                throw;
-            }
+            await db.SaveChangesAsync();
 
-            return StatusCode(HttpStatusCode.NoContent);
+            return StatusCode(HttpStatusCode.OK);
         }
 
         public async Task<IHttpActionResult> PostItem(Item item)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
+            if (!ModelState.IsValid) return BadRequest(ModelState);
 
             db.Items.Add(item);
             await db.SaveChangesAsync();
 
-            return CreatedAtRoute("DefaultApi", new { id = item.ItemId }, item);
+            return CreatedAtRoute("DefaultApi", new { id = item.Id }, item);
         }
 
         public async Task<IHttpActionResult> DeleteItem(string id)
         {
             Item item = await db.Items.FindAsync(id);
-            if (item == null)
-            {
-                return NotFound();
-            }
+            if (item == null) return NotFound();
 
             db.Items.Remove(item);
             await db.SaveChangesAsync();
@@ -95,7 +73,7 @@ namespace PAX.Controllers
 
         private bool ItemExists(string id)
         {
-            return db.Items.Count(e => e.ItemId == id) > 0;
+            return db.Items.Count(e => e.Id == id) > 0;
         }
     }
 }

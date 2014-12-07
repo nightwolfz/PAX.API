@@ -135,63 +135,6 @@ namespace PAX.Controllers
             return BadRequest(ModelState);
         }
 
-        private string ValidateClientAndRedirectUri(HttpRequestMessage request, ref string redirectUriOutput)
-        {
-
-            Uri redirectUri;
-
-            var redirectUriString = GetQueryString(Request, "redirect_uri");
-
-            if (string.IsNullOrWhiteSpace(redirectUriString))
-            {
-                return "redirect_uri is required";
-            }
-
-            bool validUri = Uri.TryCreate(redirectUriString, UriKind.Absolute, out redirectUri);
-
-            if (!validUri)
-            {
-                return "redirect_uri is invalid";
-            }
-
-            var clientId = GetQueryString(Request, "client_id");
-
-            if (string.IsNullOrWhiteSpace(clientId))
-            {
-                return "client_Id is required";
-            }
-
-            var client = _repo.FindClient(clientId);
-
-            if (client == null)
-            {
-                return string.Format("Client_id '{0}' is not registered in the system.", clientId);
-            }
-
-            if (!string.Equals(client.AllowedOrigin, redirectUri.GetLeftPart(UriPartial.Authority), StringComparison.OrdinalIgnoreCase))
-            {
-                return string.Format("The given URL is not allowed by Client_id '{0}' configuration.", clientId);
-            }
-
-            redirectUriOutput = redirectUri.AbsoluteUri;
-
-            return string.Empty;
-
-        }
-
-        private string GetQueryString(HttpRequestMessage request, string key)
-        {
-            var queryStrings = request.GetQueryNameValuePairs();
-
-            if (queryStrings == null) return null;
-
-            var match = queryStrings.FirstOrDefault(keyValue => string.Compare(keyValue.Key, key, true) == 0);
-
-            if (string.IsNullOrEmpty(match.Value)) return null;
-
-            return match.Value;
-        }
-
         // https://graph.facebook.com/oauth/access_token?client_id=304053306454752&client_secret=3b8b6d750f3a818184a5413eb981a349&grant_type=client_credentials
         private async Task<ParsedExternalAccessToken> VerifyExternalAccessToken(string provider, string accessToken)
         {
@@ -298,14 +241,9 @@ namespace PAX.Controllers
 
             public static ExternalLoginData FromIdentity(ClaimsIdentity identity)
             {
-                if (identity == null)
-                {
-                    return null;
-                }
+                Claim providerKeyClaim = identity?.FindFirst(ClaimTypes.NameIdentifier);
 
-                Claim providerKeyClaim = identity.FindFirst(ClaimTypes.NameIdentifier);
-
-                if (providerKeyClaim == null || String.IsNullOrEmpty(providerKeyClaim.Issuer) || String.IsNullOrEmpty(providerKeyClaim.Value))
+                if (String.IsNullOrEmpty(providerKeyClaim?.Issuer) || String.IsNullOrEmpty(providerKeyClaim.Value))
                 {
                     return null;
                 }

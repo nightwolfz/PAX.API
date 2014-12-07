@@ -22,7 +22,7 @@ namespace PAX.Services
 
         public virtual bool Exists(string id)
         {
-            return db.Profiles.Count(e => e.ProfileId == id) > 0;
+            return db.Profiles.Count(e => e.Id == id) > 0;
         }
     }
 }

@@ -37,7 +37,9 @@ namespace PAX.Controllers
         public async Task<IHttpActionResult> PutProfile(string id, Profile profile)
         {
             if (!ModelState.IsValid) return BadRequest("Model state sucks");
-            if (id != profile.ProfileId) return BadRequest("Cannot change GUID");
+            if (id != profile.Id) return BadRequest("Cannot change GUID");
+
+            profile.UpdatedOn = DateTime.Now;
 
             await db.SaveChanges();
 
@@ -49,7 +51,7 @@ namespace PAX.Controllers
             db.Profiles.Add(profile);
             await db.SaveChanges();
 
-            return CreatedAtRoute("DefaultApi", new { id = profile.ProfileId }, profile);
+            return CreatedAtRoute("DefaultApi", new { id = profile.Id }, profile);
         }
 
         public async Task<IHttpActionResult> DeleteProfile(string id)

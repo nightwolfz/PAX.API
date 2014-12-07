@@ -183,6 +183,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Controllers\AccountController.cs" />
+    <Compile Include="Controllers\OffersController.cs" />
     <Compile Include="Controllers\ItemsController.cs" />
     <Compile Include="Controllers\PicturesController.cs" />
     <Compile Include="Controllers\ProfilesController.cs" />
@@ -190,6 +191,7 @@
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\ConnectionContext.cs" />
     <Compile Include="Models\ExternalLoginModels.cs" />
+    <Compile Include="Models\Generic.cs" />
     <Compile Include="Models\Item.cs" />
     <Compile Include="Models\Offer.cs" />
     <Compile Include="Models\Picture.cs" />
@@ -200,6 +202,7 @@
     <Compile Include="Providers\SimpleRefreshTokenProvider.cs" />
     <Compile Include="Services\AuthRepository.cs" />
     <Compile Include="Services\GenericRepository.cs" />
+    <Compile Include="Services\ItemsRepository.cs" />
     <Compile Include="Services\PicturesRepository.cs" />
     <Compile Include="Services\ProfileRepository.cs" />
     <Compile Include="Services\UnitOfWork.cs" />

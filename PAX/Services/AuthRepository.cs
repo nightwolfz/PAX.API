@@ -72,7 +72,7 @@ namespace PAX.Services
             var account = await _userManager.CreateAsync(user);
             var profile = new Profile()
             {
-                ProfileId = user.Id,
+                Id = user.Id,
                 Name = user.UserName
             };
             _context.Profiles.Add(profile);
@@ -82,7 +82,7 @@ namespace PAX.Services
         public IdentityResult Create(IdentityUser user, Profile profile)
         {
             var account = _userManager.Create(user);
-            profile.ProfileId = user.Id;
+            profile.Id = user.Id;
             profile.Name = user.UserName;
             _context.Profiles.Add(profile);
             return account;
